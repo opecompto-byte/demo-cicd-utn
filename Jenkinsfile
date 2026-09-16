@@ -33,15 +33,23 @@ pipeline {
     }
     
     post {
-        success {
-            sh """
-                curl -H "Content-Type: application/json" \
-                -X POST \
-                -d '{"content": "✅ **NUEVA VERSIÓN DESPLEGADA**: Jenkins actualizó la web con éxito. Revisa el puerto 8090."}' \
-                ${WEBHOOK_URL}
-            """
+            success {
+                sh """
+                    curl -H "Content-Type: application/json" \
+                    -X POST \
+                    -d '{"content": "✅ **ÉXITO**: Jenkins desplegó la nueva versión correctamente. Revisa el puerto 8090."}' \
+                    ${WEBHOOK_URL}
+                """
+            }
+            failure {
+                sh """
+                    curl -H "Content-Type: application/json" \
+                    -X POST \
+                    -d '{"content": "🚨 **ERROR**: El pipeline falló. Revisa los logs en la consola de Jenkins."}' \
+                    ${WEBHOOK_URL}
+                """
+            }
         }
-    }
 }
 
 
